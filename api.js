@@ -2,27 +2,23 @@
 // "боевая" версия инстапро лежит в ключе prod
 const personalKey = ":veronika-milya";
 const baseHost = "https://webdev-hw-api.vercel.app";
+const baseUrl = "https://wedev-api.sky.pro/api/v1/prod/instapro";
 // const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 // https://wedev-api.sky.pro/api/v1/prod/instapro
 
 export async function getPostsUser(id) {
-  const response = await fetch(
-    "https://wedev-api.sky.pro/api/v1/prod/instapro/user-posts/" + id
-  );
+  const response = await fetch(baseUrl + "/user-posts/" + id);
   const data = await response.json();
   return data.posts;
 }
 
 export async function getPosts({ token }) {
-  const response = await fetch(
-    "https://wedev-api.sky.pro/api/v1/prod/instapro",
-    {
-      method: "GET",
-      headers: {
-        Authorization: token,
-      },
-    }
-  );
+  const response = await fetch(baseUrl, {
+    method: "GET",
+    headers: {
+      Authorization: token,
+    },
+  });
   if (response.status === 401) {
     throw new Error("Нет авторизации");
   }
@@ -31,21 +27,57 @@ export async function getPosts({ token }) {
 }
 
 export async function createPost({ token, imageUrl, description }) {
-  const response = await fetch(
-    "https://wedev-api.sky.pro/api/v1/prod/instapro",
-    {
-      method: "POST",
-      headers: {
-        Authorization: token,
-      },
-      body: JSON.stringify({
-        description,
-        imageUrl,
-      }),
-    }
-  );
+  const response = await fetch(baseUrl, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+    body: JSON.stringify({
+      description,
+      imageUrl,
+    }),
+  });
   if (response.status != 201) {
     throw new Error("Не удалось добавить пост");
+  }
+  return await response.json();
+}
+
+export async function deletePost({ token, id }) {
+  const response = await fetch(baseUrl + "/" + id, {
+    method: "DELETE",
+    headers: {
+      Authorization: token,
+    },
+  });
+  if (response.status != 200) {
+    throw new Error("Не удалось удалить пост");
+  }
+  return await response.json();
+}
+
+export async function addLike({ token, id }) {
+  const response = await fetch(baseUrl + "/" + id + "/like", {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  });
+  if (response.status != 200) {
+    throw new Error("Не удалось поставить лайк");
+  }
+  return await response.json();
+}
+
+export async function disLike({ token, id }) {
+  const response = await fetch(baseUrl + "/" + id + "/dislike", {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  });
+  if (response.status != 200) {
+    throw new Error("Не удалось убрать лайк");
   }
   return await response.json();
 }

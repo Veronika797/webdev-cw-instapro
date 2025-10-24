@@ -1,6 +1,7 @@
-import { createPost } from "../api.js";
+// import { createPost } from "../api.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
+import { goToPage, user } from "../index.js";
 
 let imageUrl = "";
 
@@ -36,6 +37,8 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
 
     renderHeaderComponent({
       element: document.querySelector(".header-container"),
+      user,
+      goToPage,
     });
     const uploadImageContainer = appEl.querySelector(".upload-image-container");
     if (uploadImageContainer) {

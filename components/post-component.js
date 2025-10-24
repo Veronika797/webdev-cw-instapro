@@ -1,3 +1,11 @@
+// import { formatDistanceToNow } from "date-fns";
+// import { ru } from "date-fns/locale";
+import { getToken, goToPage } from "../index.js";
+import { deletePost, addLike, disLike } from "../api.js";
+import { renderPostsPageComponent } from "./posts-page-component.js";
+import { POSTS_PAGE } from "../routes.js";
+import { renderLikeButton } from "./post-like-button.js";
+
 export function renderAllPosts({ posts, element }) {
   posts.forEach((post) => {
     const postHtml = `
@@ -12,27 +20,45 @@ export function renderAllPosts({ posts, element }) {
                       <img class="post-image" src="${post.imageUrl}">
                     </div>
                     <div class="post-likes">
-                      <button data-post-id="${post.id}" class="like-button">
-                        <img src="${
-                          post.isLiked
-                            ? "./assets/image/like-active.svg"
-                            : "./assets/images/like-not-active.svg"
-                        }">
-                      </button>
-                      <p class="post-likes-text">
-                        Нравится: <strong>${post.likes.length}</strong>
-                      </p>
+                     
                     </div>
                     <p class="post-text">
                       <span class="user-name">${post.user.name}</span>
                      ${post.description}
                     </p>
                     <p class="post-date">
-                      ${post.createdAt}
+                       ${post.createdAt} назад
                     </p>
+                    <button data-post-id="${post.id}" class="delete-button">Удалить</button>
                   </li>
                  `;
 
     element.innerHTML += postHtml;
+  });
+  buttonsDeletePost();
+  buttonsLikePost({ posts });
+}
+
+function buttonsDeletePost() {
+  const buttons = document.querySelectorAll(".delete-button");
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.dataset.postId;
+      deletePost({ token: getToken(), id });
+    });
+  });
+}
+
+function buttonsLikePost({ posts }) {
+  const postsAll = document.querySelectorAll(".post");
+
+  postsAll.forEach((post, index) => {
+    renderLikeButton({
+      element: post.querySelector(".post-likes"),
+      post,
+      id: posts[index].id,
+      length: posts[index].likes.length,
+      isLiked: posts[index].isLiked,
+    });
   });
 }

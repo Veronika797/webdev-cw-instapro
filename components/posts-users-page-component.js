@@ -3,7 +3,6 @@ import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage, getToken } from "../index.js";
 import { getPosts } from "../api.js";
 import { renderAllPosts } from "./post-component.js";
-// import { formatDistanceToNow } from "date-fns";
 
 export async function renderPostsUserPageComponent({ appEl, posts }) {
   const postHtml = `

@@ -3,7 +3,7 @@
 import { getToken, goToPage } from "../index.js";
 import { deletePost, addLike, disLike } from "../api.js";
 import { renderPostsPageComponent } from "./posts-page-component.js";
-import { POSTS_PAGE } from "../routes.js";
+import { POSTS_PAGE, USER_POSTS_PAGE } from "../routes.js";
 import { renderLikeButton } from "./post-like-button.js";
 
 export function renderAllPosts({ posts, element }) {
@@ -37,6 +37,17 @@ export function renderAllPosts({ posts, element }) {
   });
   buttonsDeletePost();
   buttonsLikePost({ posts });
+  buttonUserPosts();
+}
+
+function buttonUserPosts() {
+  const postsHeaders = document.querySelectorAll(".post-header");
+  postsHeaders.forEach((postHeader) => {
+    postHeader.addEventListener("click", () => {
+      const id = postHeader.dataset.userId;
+      goToPage(USER_POSTS_PAGE, id);
+    });
+  });
 }
 
 function buttonsDeletePost() {

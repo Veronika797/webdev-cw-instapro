@@ -1,5 +1,6 @@
 import { getToken, goToPage } from "../index.js";
 import { deletePost } from "../api.js";
+import { deletePost } from "../api.js";
 import { POSTS_PAGE, USER_POSTS_PAGE } from "../routes.js";
 import { renderLikeButton } from "./post-like-button.js";
 import { formatDistanceToNow } from "date-fns";

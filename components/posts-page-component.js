@@ -1,17 +1,9 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage, getToken } from "../index.js";
-import { getPosts } from "../api.js";
+import { goToPage, getToken } from "../index.js";
 import { renderAllPosts } from "../components/post-component.js";
-// import { formatDistanceToNow } from "date-fns";
 
 export async function renderPostsPageComponent({ appEl, posts }) {
-  // @TODO: реализовать рендер постов из api
-  /**
-   * @TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
-   * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
-   */
-
   const postHtml = `
               <div class="page-container">
                 <div class="header-container"></div>

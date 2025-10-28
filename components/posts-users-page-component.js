@@ -39,7 +39,7 @@ export async function renderPostsUserPageComponent({ appEl, posts }) {
   //   }
   // }
 
-  async function userHeaderListener() {
+  function userHeaderListener() {
     const userHeaders = document.querySelectorAll(".post-header");
     userHeaders.forEach((userEl) => {
       userEl.addEventListener("click", () => {

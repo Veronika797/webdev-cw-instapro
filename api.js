@@ -3,7 +3,7 @@
 const personalKey = ":veronika-milya";
 const baseHost = "https://webdev-hw-api.vercel.app";
 const baseUrl = "https://wedev-api.sky.pro/api/v1/prod/instapro";
-// const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
+const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 // https://wedev-api.sky.pro/api/v1/prod/instapro
 
 export async function getPostsUser(id) {
@@ -44,7 +44,7 @@ export async function createPost({ token, imageUrl, description }) {
 }
 
 export async function deletePost({ token, id }) {
-  const response = await fetch(baseUrl + "/" + id, {
+  const response = await fetch(postsHost + "/" + id, {
     method: "DELETE",
     headers: {
       Authorization: token,
@@ -64,6 +64,7 @@ export async function addLike({ token, id }) {
     },
   });
   if (response.status != 200) {
+    alert("Авторизуйтесь, чтобы поставить лайк");
     throw new Error("Не удалось поставить лайк");
   }
   return await response.json();

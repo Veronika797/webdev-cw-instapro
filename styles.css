@@ -121,6 +121,11 @@ body {
   cursor: pointer;
 }
 
+.like-button:hover {
+  color: #000000;
+  transition: 1s;
+}
+
 .user-name {
   font-weight: 500;
 }

@@ -1,10 +1,9 @@
 import { getToken, goToPage } from "../index.js";
 import { deletePost } from "../api.js";
-import { deletePost } from "../api.js";
 import { POSTS_PAGE, USER_POSTS_PAGE } from "../routes.js";
 import { renderLikeButton } from "./post-like-button.js";
-import { formatDistanceToNow } from "date-fns";
-import { ru } from "date-fns/locale";
+import { formatDistanceToNow } from "../node_modules/date-fns/index.js";
+import { ru } from "../node_modules/date-fns/locale/ru.js";
 
 function escapeHtml(str) {
   if (!str) return str;
@@ -17,13 +16,24 @@ function escapeHtml(str) {
         ">": "&gt;",
         "'": "&apos;",
         '"': "&quot;",
-      })[match]
+      })[match],
   );
 }
 
 export function renderAllPosts({ posts, element }) {
+  const userAuthJson = localStorage.getItem("user");
+  const userAuth = userAuthJson && JSON.parse(userAuthJson);
+
   posts.forEach((post) => {
-    let postHtml = `
+    const buttonHtml =
+      userAuth?._id == post.user.id
+        ? `
+      <button data-post-id="${post.id}" class="delete-button">
+        Удалить
+      </button>
+    `
+        : "";
+    const postHtml = `
       <li class="post">
         <div class="post-header" data-user-id=${post.user.id}>
             <img src="${post.user.imageUrl}" class="post-header__user-image">
@@ -32,19 +42,17 @@ export function renderAllPosts({ posts, element }) {
         <div class="post-image-container">
           <img class="post-image" src="${post.imageUrl}">
         </div>
-        <div class="post-likes">
-          
-        </div>
+        <div class="post-likes"></div>
         <p class="post-text">
           <span class="user-name">${escapeHtml(post.user.name)}</span>
           ${escapeHtml(post.description)}
         </p>
         <p class="post-date">
-            ${formatDistanceToNow(new Date(post.createdAt), { locale: ru })} назад
+            ${timing(new Date(post.createdAt))}
         </p>
-    <button data-post-id="${post.id}" class="delete-button">
-      Удалить
-    </button>
+        <div class="post-button-delete">
+          ${buttonHtml}
+        </div>
      </li>
       `;
 
@@ -53,41 +61,23 @@ export function renderAllPosts({ posts, element }) {
   buttonsDeletePost();
   buttonsLikePost({ posts });
   buttonUserPosts();
+  likePosts({ posts });
 }
 
-function buttonUserPosts() {
-  const postsHeaders = document.querySelectorAll(".post-header");
-  postsHeaders.forEach((postHeader) => {
-    postHeader.addEventListener("click", () => {
-      const id = postHeader.dataset.userId;
-      goToPage(USER_POSTS_PAGE, id);
-    });
-  });
+function timing(date) {
+  return formatDistanceToNow(date, { addSuffix: true, locale: ru });
 }
 
-function buttonsDeletePost() {
-  const buttons = document.querySelectorAll(".delete-button");
-  buttons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const id = button.dataset.postId;
-      deletePost({ token: getToken(), id })
-        .then(() => {
-          goToPage(POSTS_PAGE);
-        })
-        .catch((error) => {
-          console.error("Ошибка удаления поста:", error);
-        });
-      if (post.user.id === currentUserId) {
-        postHtml += `
-    <button data-post-id="${post.id}" class="delete-button">
-      Удалить
-    </button>
-  `;
-      } else {
-        postHtml += `
- </li>
-`;
-      }
+function likePosts({ posts }) {
+  const postsAll = document.querySelectorAll(".post");
+
+  postsAll.forEach((post, index) => {
+    renderLikeButton({
+      element: post.querySelector(".post-likes"),
+      post,
+      id: posts[index].id,
+      length: posts[index].likes.length,
+      isLiked: posts[index].isLiked,
     });
   });
 }
@@ -103,5 +93,35 @@ function buttonsLikePost({ posts }) {
       length: posts[index].likes.length,
       isLiked: posts[index].isLiked,
     });
+  });
+}
+
+function buttonUserPosts() {
+  const postsHeaders = document.querySelectorAll(".post-header");
+  postsHeaders.forEach((postHeader) => {
+    postHeader.addEventListener("click", () => {
+      const id = postHeader.dataset.userId;
+      goToPage(USER_POSTS_PAGE, id);
+    });
+  });
+}
+
+function buttonsDeletePost() {
+  const posts = document.querySelectorAll(".post");
+  posts.forEach((post) => {
+    const button = post.querySelector(".delete-button");
+    if (button) {
+      button.addEventListener("click", () => {
+        const id = button.dataset.postId;
+        deletePost({ token: getToken(), id })
+          .then(() => {
+            post.remove();
+            goToPage(POSTS_PAGE);
+          })
+          .catch((error) => {
+            console.error("Ошибка удаления поста:", error);
+          });
+      });
+    }
   });
 }

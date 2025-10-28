@@ -1,10 +1,7 @@
-// Замени на свой, чтобы получить независимый от других набор данных.
-// "боевая" версия инстапро лежит в ключе prod
 const personalKey = ":veronika-milya";
-const baseHost = "https://webdev-hw-api.vercel.app";
-const baseUrl = "https://wedev-api.sky.pro/api/v1/prod/instapro";
-const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
-// https://wedev-api.sky.pro/api/v1/prod/instapro
+const baseUrlImg = "https://webdev-hw-api.vercel.app/api";
+const baseHost = "https://wedev-api.sky.pro/api";
+const baseUrl = `${baseHost}/v1/${personalKey}/instapro`;
 
 export async function getPostsUser(id) {
   const response = await fetch(baseUrl + "/user-posts/" + id);
@@ -44,7 +41,7 @@ export async function createPost({ token, imageUrl, description }) {
 }
 
 export async function deletePost({ token, id }) {
-  const response = await fetch(postsHost + "/" + id, {
+  const response = await fetch(baseUrl + "/" + id, {
     method: "DELETE",
     headers: {
       Authorization: token,
@@ -78,13 +75,14 @@ export async function disLike({ token, id }) {
     },
   });
   if (response.status != 200) {
+    alert("Авторизуйтесь, чтобы убрать лайк");
     throw new Error("Не удалось убрать лайк");
   }
   return await response.json();
 }
 
 export async function registerUser({ login, password, name, imageUrl }) {
-  const response = await fetch(baseHost + "/api/user", {
+  const response = await fetch(baseHost + "/user", {
     method: "POST",
     body: JSON.stringify({
       login,
@@ -100,7 +98,7 @@ export async function registerUser({ login, password, name, imageUrl }) {
 }
 
 export async function loginUser({ login, password }) {
-  const response = await fetch(baseHost + "/api/user/login", {
+  const response = await fetch(baseHost + "/user/login", {
     method: "POST",
     body: JSON.stringify({
       login,
@@ -113,12 +111,11 @@ export async function loginUser({ login, password }) {
   return await response.json();
 }
 
-// Загружает картинку в облако, возвращает url загруженной картинки
 export async function uploadImage({ file }) {
   const data = new FormData();
   data.append("file", file);
 
-  const response = await fetch(baseHost + "/api/upload/image", {
+  const response = await fetch(baseUrlImg + "/upload/image", {
     method: "POST",
     body: data,
   });

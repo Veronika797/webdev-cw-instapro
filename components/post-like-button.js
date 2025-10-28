@@ -18,7 +18,6 @@ export function renderLikeButton({ element, post, id, length, isLiked }) {
   const button = post.querySelector(".like-button");
   let img = button.querySelector("img");
   const count = post.querySelector(".post-likes-text strong");
-  //   console.log(img);
 
   button.addEventListener("click", () => {
     const id = button.dataset.postId;

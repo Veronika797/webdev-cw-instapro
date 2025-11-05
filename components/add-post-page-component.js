@@ -1,12 +1,11 @@
-import { createPost } from "../api.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
+import { goToPage, user } from "../index.js";
 
 let imageUrl = "";
 
 export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
   const render = () => {
-    // @TODO: Реализовать страницу добавления поста
     const appHtml = `
     <div class="page-container">
       <div class="header-container"></div>
@@ -36,6 +35,8 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
 
     renderHeaderComponent({
       element: document.querySelector(".header-container"),
+      user,
+      goToPage,
     });
     const uploadImageContainer = appEl.querySelector(".upload-image-container");
     if (uploadImageContainer) {

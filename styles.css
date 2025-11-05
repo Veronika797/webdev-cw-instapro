@@ -57,10 +57,19 @@ body {
   cursor: pointer;
 }
 
+.delete-button:hover {
+  border: 1px solid #858484;
+  background-color: rgb(207, 204, 204);
+  color: #fff;
+  cursor: pointer;
+  transform: scale(1.05);
+}
+
 .logout-button {
   width: 130px;
   text-align: right;
 }
+
 
 .posts {
   display: flex;
@@ -121,9 +130,8 @@ body {
   cursor: pointer;
 }
 
-.like-button:hover {
-  color: #000000;
-  transition: 1s;
+.like-button img:hover {
+transform: scale(0.9);
 }
 
 .user-name {

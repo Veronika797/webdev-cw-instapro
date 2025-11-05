@@ -21,7 +21,6 @@ export function renderLikeButton({ element, post, id, length, isLiked }) {
 
   button.addEventListener("click", () => {
     const id = button.dataset.postId;
-    console.log(isLiked);
 
     if (!isLiked) {
       addLike({ token: getToken(), id }).then(() => {
